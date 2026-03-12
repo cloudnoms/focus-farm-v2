@@ -82,9 +82,16 @@ export function useGameState() {
     }
   }, []) // eslint-disable-line
 
-  // Persist on every change
+  // Persist on every change (backup — primary save is inside each mutation)
   useEffect(() => {
     saveState(state)
+  }, [state])
+
+  // Also save on tab close / page unload as final safety net
+  useEffect(() => {
+    const handler = () => saveState(state)
+    window.addEventListener('beforeunload', handler)
+    return () => window.removeEventListener('beforeunload', handler)
   }, [state])
 
   const advanceFarmGrowth = useCallback((grid) => {
@@ -140,7 +147,7 @@ export function useGameState() {
         setTimeout(() => setNewMilestone(latestMilestone), 800)
       }
 
-      return {
+      const next = {
         ...prev,
         coins: prev.coins + COINS_PER_SESSION + bonusCoins,
         energy: prev.energy + ENERGY_PER_SESSION,
@@ -150,6 +157,8 @@ export function useGameState() {
         unlockedMilestones: newUnlocked,
         achievements: newAchievements,
       }
+      saveState(next)
+      return next
     })
 
     return {
@@ -161,14 +170,13 @@ export function useGameState() {
   const buyItem = useCallback((cropId, cost) => {
     setState(prev => {
       if (prev.coins < cost) return prev
-      return {
+      const next = {
         ...prev,
         coins: prev.coins - cost,
-        inventory: {
-          ...prev.inventory,
-          [cropId]: (prev.inventory[cropId] || 0) + 1,
-        },
+        inventory: { ...prev.inventory, [cropId]: (prev.inventory[cropId] || 0) + 1 },
       }
+      saveState(next)
+      return next
     })
   }, [])
 
@@ -187,13 +195,15 @@ export function useGameState() {
       const newAchievements = { ...prev.achievements }
       if (!newAchievements.first_crop) newAchievements.first_crop = true
 
-      return {
+      const next = {
         ...prev,
         energy: prev.energy - ENERGY_TO_PLANT,
         inventory: { ...prev.inventory, [cropId]: prev.inventory[cropId] - 1 },
         farmGrid: newGrid,
         achievements: newAchievements,
       }
+      saveState(next)
+      return next
     })
   }, [])
 
@@ -215,12 +225,14 @@ export function useGameState() {
       const newAchievements = { ...prev.achievements }
       if (!newAchievements.first_harvest) newAchievements.first_harvest = true
 
-      return {
+      const next = {
         ...prev,
         coins: prev.coins + crop.harvestCoins,
         farmGrid: newGrid,
         achievements: newAchievements,
       }
+      saveState(next)
+      return next
     })
   }, [])
 
