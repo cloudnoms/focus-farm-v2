@@ -27,7 +27,7 @@ export default function FarmScreen({ gameState, plantCrop, harvestCrop, morningR
   const hasRiver = gameState.unlockedMilestones.includes('river')
 
   return (
-    <div className="flex flex-col min-h-[calc(100vh-64px)]" style={{ background: '#1a2e0a' }}>
+    <div className="flex flex-col h-[calc(100vh-64px)] md:h-screen overflow-hidden" style={{ background: '#1a2e0a' }}>
       <MorningCheckin visible={!!morningRewards} rewards={morningRewards} onCollect={onDismissMorning} />
 
       {/* Sky */}
@@ -59,7 +59,7 @@ export default function FarmScreen({ gameState, plantCrop, harvestCrop, morningR
       )}
 
       {/* Farm world — trees + grid */}
-      <div className="flex-1 flex flex-col items-center justify-center px-2 py-1 md:py-4">
+      <div className="flex-1 flex flex-col items-center justify-center px-2 py-1 overflow-hidden">
         {/* Top tree row */}
         <div className="w-full flex justify-around px-4 mb-0.5">
           {TREES.map((t, i) => <span key={i} style={{ fontSize: '16px' }}>{t}</span>)}
