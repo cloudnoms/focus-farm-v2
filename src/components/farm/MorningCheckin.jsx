@@ -1,5 +1,6 @@
 import React from 'react'
 import { MORNING_COINS } from '../../constants/gameConfig.js'
+import { playMorningCollect } from '../../utils/audioUtils.js'
 
 export default function MorningCheckin({ visible, rewards, onCollect }) {
   if (!visible) return null
@@ -25,7 +26,7 @@ export default function MorningCheckin({ visible, rewards, onCollect }) {
         </div>
 
         <button
-          onClick={onCollect}
+          onClick={() => { playMorningCollect(); onCollect() }}
           className="w-full py-3 bg-leaf-500 hover:bg-leaf-600 text-white font-bold rounded-2xl transition-colors"
         >
           Collect &amp; Start Your Day 🌱

@@ -1,10 +1,15 @@
 import React from 'react'
+import { playTimerStart, playTimerPause, playTimerReset } from '../../utils/audioUtils.js'
 
 export default function TimerControls({ isRunning, onStart, onPause, onReset, onSkip, sessionType }) {
+  function handleStart() { playTimerStart(); onStart() }
+  function handlePause() { playTimerPause(); onPause() }
+  function handleReset() { playTimerReset(); onReset() }
+
   return (
     <div className="flex items-center gap-3 mt-6">
       <button
-        onClick={onReset}
+        onClick={handleReset}
         className="w-11 h-11 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 transition-colors text-lg"
         aria-label="Reset"
       >
@@ -13,7 +18,7 @@ export default function TimerControls({ isRunning, onStart, onPause, onReset, on
 
       {isRunning ? (
         <button
-          onClick={onPause}
+          onClick={handlePause}
           className="w-16 h-16 flex items-center justify-center rounded-full bg-leaf-500 hover:bg-leaf-600 text-white shadow-lg hover:shadow-xl transition-all text-2xl font-bold"
           aria-label="Pause"
         >
@@ -21,7 +26,7 @@ export default function TimerControls({ isRunning, onStart, onPause, onReset, on
         </button>
       ) : (
         <button
-          onClick={onStart}
+          onClick={handleStart}
           className="w-16 h-16 flex items-center justify-center rounded-full bg-leaf-500 hover:bg-leaf-600 text-white shadow-lg hover:shadow-xl transition-all text-2xl"
           aria-label="Start"
         >

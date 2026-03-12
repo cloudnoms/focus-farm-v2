@@ -1,4 +1,5 @@
 import React from 'react'
+import { playNavClick } from '../../utils/audioUtils.js'
 
 const TABS = [
   { id: 'timer', label: 'Focus', icon: '⏱️' },
@@ -15,7 +16,7 @@ export default function NavigationBar({ activeScreen, onNavigate }) {
         {TABS.map(tab => (
           <button
             key={tab.id}
-            onClick={() => onNavigate(tab.id)}
+            onClick={() => { playNavClick(); onNavigate(tab.id) }}
             className={`flex-1 flex flex-col items-center py-3 transition-all ${
               activeScreen === tab.id
                 ? 'text-leaf-600'

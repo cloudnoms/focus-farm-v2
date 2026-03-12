@@ -1,6 +1,7 @@
 import React from 'react'
 import WorldCard from './WorldCard.jsx'
 import { WORLDS } from '../../constants/worldData.js'
+import { playWorldSelect } from '../../utils/audioUtils.js'
 
 export default function WorldScreen({ totalSessions, activeWorldId, onSelectWorld }) {
   const unlockedCount = WORLDS.filter(w => totalSessions >= w.sessionsRequired).length
@@ -46,7 +47,7 @@ export default function WorldScreen({ totalSessions, activeWorldId, onSelectWorl
             world={world}
             isActive={activeWorldId === world.id}
             isUnlocked={totalSessions >= world.sessionsRequired}
-            onSelect={() => onSelectWorld(world.id)}
+            onSelect={() => { playWorldSelect(); onSelectWorld(world.id) }}
           />
         ))}
       </div>

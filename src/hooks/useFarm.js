@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
 import { CROPS } from '../constants/cropData.js'
-import { playPlantSound, playHarvestSound } from '../utils/audioUtils.js'
+import { playPlantSound, playHarvestSound, playTileSelect } from '../utils/audioUtils.js'
 
 export function useFarm(gameState, plantCrop, harvestCrop) {
   const [selectedTile, setSelectedTile] = useState(null)
@@ -19,6 +19,7 @@ export function useFarm(gameState, plantCrop, harvestCrop) {
       }
       return
     }
+    playTileSelect()
     setSelectedTile(prev => prev === tileId ? null : tileId)
   }, [placingCropId, gameState, plantCrop])
 

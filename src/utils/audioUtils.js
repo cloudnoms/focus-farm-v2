@@ -7,33 +7,31 @@ function getCtx() {
   return audioCtx
 }
 
+function note(ctx, freq, type, volume, startTime, duration) {
+  const osc = ctx.createOscillator()
+  const gain = ctx.createGain()
+  osc.connect(gain)
+  gain.connect(ctx.destination)
+  osc.type = type
+  osc.frequency.value = freq
+  gain.gain.setValueAtTime(0, startTime)
+  gain.gain.linearRampToValueAtTime(volume, startTime + 0.02)
+  gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration)
+  osc.start(startTime)
+  osc.stop(startTime + duration)
+}
+
+// Session complete — rising C major arpeggio
 export function playSessionComplete() {
   try {
     const ctx = getCtx()
-    const notes = [523.25, 659.25, 783.99] // C5, E5, G5
-
-    notes.forEach((freq, i) => {
-      const osc = ctx.createOscillator()
-      const gain = ctx.createGain()
-      osc.connect(gain)
-      gain.connect(ctx.destination)
-
-      osc.type = 'sine'
-      osc.frequency.value = freq
-
-      const startTime = ctx.currentTime + i * 0.18
-      gain.gain.setValueAtTime(0, startTime)
-      gain.gain.linearRampToValueAtTime(0.18, startTime + 0.05)
-      gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.6)
-
-      osc.start(startTime)
-      osc.stop(startTime + 0.6)
+    ;[523.25, 659.25, 783.99].forEach((freq, i) => {
+      note(ctx, freq, 'sine', 0.18, ctx.currentTime + i * 0.18, 0.6)
     })
-  } catch {
-    // Audio not available — silently fail
-  }
+  } catch {}
 }
 
+// Plant seed — soft ascending pop
 export function playPlantSound() {
   try {
     const ctx = getCtx()
@@ -41,44 +39,138 @@ export function playPlantSound() {
     const gain = ctx.createGain()
     osc.connect(gain)
     gain.connect(ctx.destination)
-
     osc.type = 'sine'
-    osc.frequency.setValueAtTime(400, ctx.currentTime)
-    osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.1)
-
-    gain.gain.setValueAtTime(0.1, ctx.currentTime)
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3)
-
+    osc.frequency.setValueAtTime(320, ctx.currentTime)
+    osc.frequency.exponentialRampToValueAtTime(580, ctx.currentTime + 0.12)
+    gain.gain.setValueAtTime(0.12, ctx.currentTime)
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25)
     osc.start(ctx.currentTime)
-    osc.stop(ctx.currentTime + 0.3)
-  } catch {
-    // silently fail
-  }
+    osc.stop(ctx.currentTime + 0.25)
+  } catch {}
 }
 
+// Harvest — bright triangle arpeggio
 export function playHarvestSound() {
   try {
     const ctx = getCtx()
-    const notes = [659.25, 783.99, 1046.5] // E5, G5, C6
-
-    notes.forEach((freq, i) => {
-      const osc = ctx.createOscillator()
-      const gain = ctx.createGain()
-      osc.connect(gain)
-      gain.connect(ctx.destination)
-
-      osc.type = 'triangle'
-      osc.frequency.value = freq
-
-      const startTime = ctx.currentTime + i * 0.12
-      gain.gain.setValueAtTime(0, startTime)
-      gain.gain.linearRampToValueAtTime(0.15, startTime + 0.04)
-      gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.5)
-
-      osc.start(startTime)
-      osc.stop(startTime + 0.5)
+    ;[659.25, 783.99, 1046.5].forEach((freq, i) => {
+      note(ctx, freq, 'triangle', 0.15, ctx.currentTime + i * 0.12, 0.5)
     })
-  } catch {
-    // silently fail
-  }
+  } catch {}
+}
+
+// Buy seed — coin clink: two quick high tones
+export function playBuySound() {
+  try {
+    const ctx = getCtx()
+    ;[1200, 1500].forEach((freq, i) => {
+      note(ctx, freq, 'triangle', 0.1, ctx.currentTime + i * 0.1, 0.2)
+    })
+  } catch {}
+}
+
+// Timer start — low-to-high soft swoosh
+export function playTimerStart() {
+  try {
+    const ctx = getCtx()
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+    osc.connect(gain)
+    gain.connect(ctx.destination)
+    osc.type = 'sine'
+    osc.frequency.setValueAtTime(220, ctx.currentTime)
+    osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.2)
+    gain.gain.setValueAtTime(0, ctx.currentTime)
+    gain.gain.linearRampToValueAtTime(0.12, ctx.currentTime + 0.05)
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3)
+    osc.start(ctx.currentTime)
+    osc.stop(ctx.currentTime + 0.3)
+  } catch {}
+}
+
+// Timer pause — high-to-low soft swoosh (reverse of start)
+export function playTimerPause() {
+  try {
+    const ctx = getCtx()
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+    osc.connect(gain)
+    gain.connect(ctx.destination)
+    osc.type = 'sine'
+    osc.frequency.setValueAtTime(440, ctx.currentTime)
+    osc.frequency.exponentialRampToValueAtTime(220, ctx.currentTime + 0.2)
+    gain.gain.setValueAtTime(0, ctx.currentTime)
+    gain.gain.linearRampToValueAtTime(0.1, ctx.currentTime + 0.03)
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.28)
+    osc.start(ctx.currentTime)
+    osc.stop(ctx.currentTime + 0.28)
+  } catch {}
+}
+
+// Timer reset — short neutral double-tap
+export function playTimerReset() {
+  try {
+    const ctx = getCtx()
+    ;[330, 330].forEach((freq, i) => {
+      note(ctx, freq, 'sine', 0.08, ctx.currentTime + i * 0.1, 0.15)
+    })
+  } catch {}
+}
+
+// Tab navigation — light tap
+export function playNavClick() {
+  try {
+    const ctx = getCtx()
+    note(ctx, 800, 'sine', 0.06, ctx.currentTime, 0.1)
+  } catch {}
+}
+
+// Tile select — soft low thud
+export function playTileSelect() {
+  try {
+    const ctx = getCtx()
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+    osc.connect(gain)
+    gain.connect(ctx.destination)
+    osc.type = 'sine'
+    osc.frequency.setValueAtTime(180, ctx.currentTime)
+    osc.frequency.exponentialRampToValueAtTime(120, ctx.currentTime + 0.1)
+    gain.gain.setValueAtTime(0.08, ctx.currentTime)
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15)
+    osc.start(ctx.currentTime)
+    osc.stop(ctx.currentTime + 0.15)
+  } catch {}
+}
+
+// Morning collect — warm ascending three-note reward
+export function playMorningCollect() {
+  try {
+    const ctx = getCtx()
+    ;[392, 523.25, 659.25].forEach((freq, i) => {
+      note(ctx, freq, 'sine', 0.14, ctx.currentTime + i * 0.15, 0.5)
+    })
+  } catch {}
+}
+
+// World select — soft whoosh + landing tone
+export function playWorldSelect() {
+  try {
+    const ctx = getCtx()
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+    osc.connect(gain)
+    gain.connect(ctx.destination)
+    osc.type = 'sine'
+    osc.frequency.setValueAtTime(300, ctx.currentTime)
+    osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.25)
+    gain.gain.setValueAtTime(0, ctx.currentTime)
+    gain.gain.linearRampToValueAtTime(0.1, ctx.currentTime + 0.05)
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4)
+    osc.start(ctx.currentTime)
+    osc.stop(ctx.currentTime + 0.4)
+
+    // Landing tone
+    note(ctx, 523.25, 'sine', 0.08, ctx.currentTime + 0.28, 0.4)
+  } catch {}
 }
