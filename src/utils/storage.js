@@ -1,12 +1,19 @@
 import { STORAGE_KEY, STORAGE_VERSION } from '../constants/gameConfig.js'
 
-export function loadState() {
+export function loadState(defaults) {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return null
     const parsed = JSON.parse(raw)
+    // Version mismatch — wipe and start fresh
     if (parsed.version !== STORAGE_VERSION) return null
-    return parsed
+    // Merge with defaults so any fields added after initial save are populated
+    return {
+      ...defaults,
+      ...parsed,
+      achievements: { ...defaults.achievements, ...parsed.achievements },
+      inventory: { ...defaults.inventory, ...parsed.inventory },
+    }
   } catch {
     return null
   }

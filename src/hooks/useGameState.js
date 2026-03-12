@@ -60,8 +60,9 @@ function buildDefaultState() {
 
 export function useGameState() {
   const [state, setState] = useState(() => {
-    const saved = loadState()
-    return saved || buildDefaultState()
+    const defaults = buildDefaultState()
+    const saved = loadState(defaults)
+    return saved || defaults
   })
 
   const [newMilestone, setNewMilestone] = useState(null)
