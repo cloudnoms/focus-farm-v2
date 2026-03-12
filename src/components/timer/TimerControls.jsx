@@ -2,8 +2,8 @@ import React from 'react'
 import { playTimerStart, playTimerPause, playTimerReset } from '../../utils/audioUtils.js'
 
 export default function TimerControls({ isRunning, onStart, onPause, onReset, onSkip, sessionType }) {
-  function handleStart() { playTimerStart(); onStart() }
-  function handlePause() { playTimerPause(); onPause() }
+  async function handleStart() { await playTimerStart(); onStart() }
+  async function handlePause() { await playTimerPause(); onPause() }
   function handleReset() { playTimerReset(); onReset() }
 
   return (
