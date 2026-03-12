@@ -30,10 +30,11 @@ export default function App() {
   }
 
   return (
-    <div className="max-w-md mx-auto relative min-h-screen">
+    <div className="relative min-h-screen">
       <MilestoneToast milestone={newMilestone} onDismiss={dismissMilestone} />
 
-      <div className="pb-16">
+      {/* md: push content right of sidebar (w-20); mobile: push content above bottom nav (pb-16) */}
+      <div className="pb-16 md:pb-0 md:ml-20">
         {activeScreen === 'timer' && (
           <TimerScreen
             coins={state.coins}

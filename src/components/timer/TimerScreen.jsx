@@ -32,12 +32,12 @@ export default function TimerScreen({ coins, energy, streak, onSessionComplete }
       <div className="relative my-6">
         <ProgressRing
           progress={timer.progress}
-          size={240}
-          strokeWidth={12}
+          size={typeof window !== 'undefined' && window.innerWidth >= 768 ? 320 : 240}
+          strokeWidth={14}
           color={RING_COLORS[timer.sessionType]}
         />
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-5xl font-bold text-gray-800 tabular-nums tracking-tight">
+          <span className="text-5xl md:text-7xl font-bold text-gray-800 tabular-nums tracking-tight">
             {formatTime(timer.timeLeft)}
           </span>
         </div>

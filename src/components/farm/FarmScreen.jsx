@@ -59,7 +59,7 @@ export default function FarmScreen({ gameState, plantCrop, harvestCrop, morningR
       )}
 
       {/* Farm world — trees + grid */}
-      <div className="flex-1 flex flex-col items-center justify-center px-2 py-1">
+      <div className="flex-1 flex flex-col items-center justify-center px-2 py-1 md:py-4">
         {/* Top tree row */}
         <div className="w-full flex justify-around px-4 mb-0.5">
           {TREES.map((t, i) => <span key={i} style={{ fontSize: '16px' }}>{t}</span>)}

@@ -9,7 +9,7 @@ export default function ShopScreen({ coins, energy, inventory, buyItem }) {
   const shop = useShop(coins, inventory, buyItem)
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-gradient-to-b from-amber-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white max-w-2xl mx-auto">
       <div className="px-4 pt-4 pb-2">
         <div className="flex items-center justify-between mb-1">
           <h1 className="font-bold text-gray-800 text-lg">Seed Shop</h1>
