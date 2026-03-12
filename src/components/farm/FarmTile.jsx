@@ -1,14 +1,14 @@
 import React, { memo } from 'react'
 import { CROPS } from '../../constants/cropData.js'
+import PixelCrop from '../atoms/PixelCrop.jsx'
 
 const SOIL_EMPTY   = { bg: '#3d2410', inner: '#4e2e14', border: '#2a1a0a' }
 const SOIL_PLANTED = { bg: '#3d2410', inner: '#3a2810', border: '#2a1a0a' }
 const SOIL_GROWING = { bg: '#3a2d10', inner: '#4a3a14', border: '#2a200a' }
-const SOIL_HARVEST = { bg: '#4a3800', inner: '#6b5200', border: '#c9960040' }
+const SOIL_HARVEST = { bg: '#4a3800', inner: '#6b5200', border: '#2a200a' }
 
 function FarmTile({ tile, isSelected, isPlacing, onClick }) {
   const crop = tile.cropId ? CROPS[tile.cropId] : null
-  const emoji = crop ? crop.stages[tile.stage] : null
   const maxStage = crop ? crop.stages.length - 1 : 0
   const isHarvest = crop && tile.stage >= maxStage
   const isGrowing = crop && !isHarvest && tile.stage > 0
@@ -37,27 +37,19 @@ function FarmTile({ tile, isSelected, isPlacing, onClick }) {
       }}
       className="w-full aspect-square flex items-center justify-center cursor-pointer transition-all duration-150 select-none relative overflow-hidden rounded-sm hover:brightness-125 active:scale-95"
     >
-      {/* Inner plot texture */}
-      <div
-        className="absolute inset-[2px] rounded-sm"
-        style={{ background: colors.inner }}
-      />
-      {/* Crop emoji */}
-      {emoji && (
-        <span
-          className="relative z-10 leading-none select-none"
-          style={{
-            fontSize: 'clamp(10px, 2.8vw, 18px)',
-            opacity: tile.stage === 0 ? 0.75 : 1,
-            filter: isHarvest ? 'drop-shadow(0 0 3px #f59e0b)' : undefined,
-          }}
-        >
-          {emoji}
-        </span>
+      <div className="absolute inset-[2px] rounded-sm" style={{ background: colors.inner }} />
+      {crop && (
+        <div className="relative z-10 flex items-center justify-center w-full h-full">
+          <PixelCrop
+            cropId={tile.cropId}
+            stage={tile.stage}
+            size={28}
+            glow={isHarvest}
+          />
+        </div>
       )}
-      {/* Empty planting indicator in placing mode */}
       {isPlacing && tile.type === 'empty' && (
-        <span className="relative z-10 text-green-400 opacity-50 text-xs">+</span>
+        <span className="relative z-10 text-green-400 opacity-40 text-xs font-bold">+</span>
       )}
     </button>
   )
