@@ -1,25 +1,12 @@
 import React, { useEffect } from 'react'
 import { startFarmMusic, stopFarmMusic } from '../../utils/audioUtils.js'
-import FarmGrid from './FarmGrid.jsx'
+import IsoFarmGrid from './IsoFarmGrid.jsx'
 import CropInfo from './CropInfo.jsx'
 import MorningCheckin from './MorningCheckin.jsx'
 import { useFarm } from '../../hooks/useFarm.js'
 import { CROPS, CROP_LIST } from '../../constants/cropData.js'
 import { MILESTONES } from '../../constants/gameConfig.js'
 
-const TREES = ['🌲','🌳','🌲','🌳','🌲','🌳','🌲','🌳','🌲','🌳']
-const FLOWERS = ['🌸','🌼','🌺','🌻','🌷','🌸','🌼','🌺','🌻','🌷']
-
-function TreeBorder({ row = false }) {
-  return (
-    <div className={`flex ${row ? 'flex-row' : 'flex-col'} items-center justify-around`}
-      style={{ gap: '1px' }}>
-      {TREES.slice(0, row ? 10 : 6).map((t, i) => (
-        <span key={i} style={{ fontSize: row ? '18px' : '16px', lineHeight: 1 }}>{t}</span>
-      ))}
-    </div>
-  )
-}
 
 export default function FarmScreen({ gameState, plantCrop, harvestCrop, morningRewards, onDismissMorning }) {
   useEffect(() => {
@@ -64,41 +51,14 @@ export default function FarmScreen({ gameState, plantCrop, harvestCrop, morningR
         </div>
       )}
 
-      {/* Farm world — trees + grid */}
+      {/* Farm world — isometric grid */}
       <div className="flex-1 flex flex-col items-center justify-center px-2 py-1 overflow-hidden">
-        {/* Top tree row */}
-        <div className="w-full flex justify-around px-4 mb-0.5">
-          {TREES.map((t, i) => <span key={i} style={{ fontSize: '16px' }}>{t}</span>)}
-        </div>
-
-        {/* Middle: side trees + grid */}
-        <div className="flex items-center gap-1 w-full">
-          <div className="flex flex-col justify-around" style={{ minWidth: '22px', gap: '2px' }}>
-            {['🌲','🌳','🌿','🌲','🌳','🌿'].map((t,i) => (
-              <span key={i} style={{ fontSize: '14px' }}>{t}</span>
-            ))}
-          </div>
-
-          <div className="flex-1">
-            <FarmGrid
-              grid={gameState.farmGrid}
-              selectedTile={farm.selectedTile}
-              placingCropId={farm.placingCropId}
-              onTileClick={farm.selectTile}
-            />
-          </div>
-
-          <div className="flex flex-col justify-around" style={{ minWidth: '22px', gap: '2px' }}>
-            {['🌳','🌲','🌿','🌳','🌲','🌿'].map((t,i) => (
-              <span key={i} style={{ fontSize: '14px' }}>{t}</span>
-            ))}
-          </div>
-        </div>
-
-        {/* Bottom flowers row */}
-        <div className="w-full flex justify-around px-4 mt-0.5">
-          {FLOWERS.map((f, i) => <span key={i} style={{ fontSize: '13px' }}>{f}</span>)}
-        </div>
+        <IsoFarmGrid
+          grid={gameState.farmGrid}
+          selectedTile={farm.selectedTile}
+          placingCropId={farm.placingCropId}
+          onTileClick={farm.selectTile}
+        />
 
         {/* River (milestone unlock) */}
         {hasRiver && (
