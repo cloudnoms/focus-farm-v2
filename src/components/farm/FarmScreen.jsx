@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { startFarmMusic, stopFarmMusic } from '../../utils/audioUtils.js'
 import FarmGrid from './FarmGrid.jsx'
 import CropInfo from './CropInfo.jsx'
 import MorningCheckin from './MorningCheckin.jsx'
@@ -21,6 +22,11 @@ function TreeBorder({ row = false }) {
 }
 
 export default function FarmScreen({ gameState, plantCrop, harvestCrop, morningRewards, onDismissMorning }) {
+  useEffect(() => {
+    startFarmMusic()
+    return () => stopFarmMusic()
+  }, [])
+
   const farm = useFarm(gameState, plantCrop, harvestCrop)
   const inventoryItems = CROP_LIST.filter(c => gameState.inventory[c.id] > 0)
   const nextMilestone = MILESTONES.find(m => !gameState.unlockedMilestones.includes(m.id))
